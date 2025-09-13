@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { QuizStart } from './QuizStart';
 import { QuizQuestion } from './QuizQuestion';
 import { QuizResults } from './QuizResults';
-import { quizQuestions } from '../data/questions';
+import { getRandomQuizQuestions } from '../data/questions';
 import { generateAIFeedback } from '../utils/aifeedback';
-import { QuizAttempt, QuizResult } from '../types/quiz';
+import { QuizAttempt, QuizResult, Question } from '../types/quiz';
 
 type QuizState = 'start' | 'question' | 'results';
 
@@ -13,8 +13,12 @@ export const Quiz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
   const [quizStartTime, setQuizStartTime] = useState<number>(0);
+  const [currentQuizQuestions, setCurrentQuizQuestions] = useState<Question[]>([]);
 
   const handleStart = () => {
+    // Generate a new set of random questions for this quiz session
+    const randomQuestions = getRandomQuizQuestions(12);
+    setCurrentQuizQuestions(randomQuestions);
     setState('question');
     setCurrentQuestionIndex(0);
     setAttempts([]);
@@ -22,7 +26,7 @@ export const Quiz = () => {
   };
 
   const handleAnswer = (selectedAnswer: number, timeSpent: number) => {
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const currentQuestion = currentQuizQuestions[currentQuestionIndex];
     const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
     
     const attempt: QuizAttempt = {
@@ -34,7 +38,7 @@ export const Quiz = () => {
 
     setAttempts(prev => [...prev, attempt]);
 
-    if (currentQuestionIndex < quizQuestions.length - 1) {
+    if (currentQuestionIndex < currentQuizQuestions.length - 1) {
       setTimeout(() => {
         setCurrentQuestionIndex(prev => prev + 1);
       }, 1500);
@@ -58,7 +62,7 @@ export const Quiz = () => {
     };
 
     attempts.forEach(attempt => {
-      const question = quizQuestions.find(q => q.id === attempt.questionId);
+      const question = currentQuizQuestions.find(q => q.id === attempt.questionId);
       if (question) {
         categoryScores[question.category].total++;
         if (attempt.isCorrect) {
@@ -69,7 +73,7 @@ export const Quiz = () => {
 
     return {
       score: correctAnswers,
-      totalQuestions: quizQuestions.length,
+      totalQuestions: currentQuizQuestions.length,
       attempts,
       totalTimeSpent,
       categoryScores
@@ -81,18 +85,19 @@ export const Quiz = () => {
     setCurrentQuestionIndex(0);
     setAttempts([]);
     setQuizStartTime(0);
+    setCurrentQuizQuestions([]);
   };
 
   if (state === 'start') {
     return <QuizStart onStart={handleStart} />;
   }
 
-  if (state === 'question') {
+  if (state === 'question' && currentQuizQuestions.length > 0) {
     return (
       <QuizQuestion
-        question={quizQuestions[currentQuestionIndex]}
+        question={currentQuizQuestions[currentQuestionIndex]}
         questionNumber={currentQuestionIndex + 1}
-        totalQuestions={quizQuestions.length}
+        totalQuestions={currentQuizQuestions.length}
         onAnswer={handleAnswer}
       />
     );
