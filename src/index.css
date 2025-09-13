@@ -8,45 +8,45 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 240 5% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 217 91% 55%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 160 84% 39%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 160 60% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 5% 6%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 263 70% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 263 50% 65%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 240 5% 11%;
-    --input: 240 5% 11%;
-    --ring: 217 91% 60%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 91% 55%;
 
     /* Quiz-specific colors */
-    --quiz-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(263 70% 60%));
-    --success: 160 84% 39%;
-    --success-foreground: 0 0% 98%;
+    --quiz-gradient: linear-gradient(135deg, hsl(217 70% 85%), hsl(263 40% 85%));
+    --success: 160 60% 50%;
+    --success-foreground: 0 0% 100%;
     --warning: 48 96% 53%;
-    --warning-foreground: 240 10% 3.9%;
+    --warning-foreground: 222.2 84% 4.9%;
     
     /* Shadows and effects */
-    --shadow-elegant: 0 10px 30px -10px hsl(217 91% 60% / 0.3);
-    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.15);
-    --glow: 0 0 20px hsl(217 91% 60% / 0.4);
+    --shadow-elegant: 0 10px 30px -10px hsl(217 70% 50% / 0.2);
+    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.08);
+    --glow: 0 0 20px hsl(217 70% 60% / 0.3);
 
     --radius: 0.5rem;
 
