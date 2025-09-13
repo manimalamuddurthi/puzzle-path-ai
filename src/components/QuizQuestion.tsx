@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -14,8 +14,9 @@ interface QuizQuestionProps {
 
 export const QuizQuestion = ({ question, questionNumber, totalQuestions, onAnswer }: QuizQuestionProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [timeLeft, setTimeLeft] = useState(question.timeLimit);
-  const [startTime] = useState(Date.now());
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(Date.now());
+  const answeredRef = useRef(false);
 
   const getCategoryIcon = (category: Question['category']) => {
     switch (category) {
@@ -40,32 +41,42 @@ export const QuizQuestion = ({ question, questionNumber, totalQuestions, onAnswe
   };
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          const timeSpent = (Date.now() - startTime) / 1000;
-          onAnswer(selectedAnswer ?? -1, timeSpent);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Reset state when question changes
+    setSelectedAnswer(null);
+    setTimeLeft(question?.timeLimit ?? 0);
+    setStartTime(Date.now());
+    answeredRef.current = false;
+  }, [question]);
 
+  useEffect(() => {
+    if (answeredRef.current) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => Math.max(prev - 1, 0));
+    }, 1000);
     return () => clearInterval(timer);
-  }, [selectedAnswer, onAnswer, startTime]);
+  }, [question]);
+
+  useEffect(() => {
+    if (timeLeft <= 0 && !answeredRef.current) {
+      answeredRef.current = true;
+      const timeSpent = (Date.now() - startTime) / 1000;
+      Promise.resolve().then(() => onAnswer(selectedAnswer ?? -1, timeSpent));
+    }
+  }, [timeLeft, onAnswer, selectedAnswer, startTime]);
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (selectedAnswer !== null) return;
+    if (answeredRef.current) return;
     setSelectedAnswer(answerIndex);
+    answeredRef.current = true;
     
     setTimeout(() => {
       const timeSpent = (Date.now() - startTime) / 1000;
       onAnswer(answerIndex, timeSpent);
-    }, 1000);
+    }, 600);
   };
 
   const progress = ((questionNumber - 1) / totalQuestions) * 100;
-  const timeProgress = (timeLeft / question.timeLimit) * 100;
+  const timeProgress = question.timeLimit ? (timeLeft / question.timeLimit) * 100 : 0;
 
   return (
     <div className="min-h-screen bg-quiz-gradient flex items-center justify-center p-4">
