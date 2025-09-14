@@ -5,6 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 const Auth = () => {
   const [loginData, setLoginData] = useState({
@@ -104,6 +106,13 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-quiz-gradient-start to-quiz-gradient-end p-4">
+      <Link to="/" className="absolute top-4 left-4">
+        <Button variant="ghost" size="sm">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Quiz
+        </Button>
+      </Link>
+      
       <Card className="w-full max-w-md shadow-quiz-glow">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-quiz-accent bg-clip-text text-transparent">
